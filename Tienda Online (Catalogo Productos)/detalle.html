@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalle</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+  <style>
+    body {
+      font-family: 'Times New Roman', Times, serif;
+    }
+  </style>
+<body class="bg-black min-h-screen flex flex-col text-white">
+  
+  <header class="flex justify-between items-center px-8 py-6 bg-gray-900 shadow-lg border-b-2 border-purple-800 rounded-b-2xl mb-10">
+    <div></div>      
+    <h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-wide drop-shadow mb-2">Tienda de Jose Chasi</h1>
+
+    <div class="flex gap-2">
+      <button id="volverBtn" class="bg-purple-800 hover:bg-purple-900 text-white px-5 py-2 rounded-lg shadow transition-colors duration-300">Inicio</button>
+      <button id="logoutBtn" class="hidden bg-gray-800 hover:bg-purple-800 text-white px-5 py-2 rounded-lg shadow transition-colors duration-300">Cerrar sesión</button>
+    </div>  
+  </header>
+  <main class="flex-1 flex justify-center items-center">
+    <div id="detalleProducto" class="bg-gray-800 rounded-2xl shadow-2xl p-10 max-w-xl w-full text-center border border-purple-800">
+      <p>Cargando producto...</p>
+    </div>
+  </main>
+    <footer class="bg-gray-800 text-white py-10 mt-16 shadow-inner rounded-t-2xl border-t-2 border-purple-800">
+    <div class="container mx-auto text-center">
+      <p class="font-semibold">&copy; 2025 Tienda de Jose Chasi. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+  <script src="detalle.js"></script>
+</body>

@@ -2,18 +2,17 @@ const contenedorProductos = document.getElementById('productos');
 const inputBusqueda = document.getElementById('busqueda');
 const contenedorCategorias = document.getElementById('categorias');
 let productos = [];
-let categoriasSeleccionada = "all";
+let categoriaSeleccionada = "all";
 
 async function cargarProductos() {
   try {
-    mostrarMensaje('Cargando productos...');
+    mostrarMensaje('Cargando productos...'); 
     const response = await fetch('https://fakestoreapi.com/products');
     if (!response.ok) {
       throw new Error('Error en la respuesta de la API');
     }
     const products = await response.json();
-    productos = products;
-
+    productos = products; 
     if (products.length === 0) {
       console.log('No hay productos disponibles');
     } else {
@@ -24,77 +23,101 @@ async function cargarProductos() {
     mostrarMensaje('Error al cargar los productos. Por favor, inténtalo de nuevo más tarde.');
   }
 }
-
 async function cargarCategorias() {
-  try {
-    const response = await fetch('https://fakestoreapi.com/products/categories');
-    if (!response.ok) {
+  try{
+    const respuesta = await fetch("https://fakestoreapi.com/products/categories");
+    if (!respuesta.ok) {
       throw new Error('Error en la respuesta de la API');
     }
-    const categories = await response.json();
-    mostrarCategorias(['all' , ...categories]); 
+    const categorias = await respuesta.json();
+    mostrarCategorias(["all", ...categorias]);
   } catch (error) {
-    console.error('Error al cargar las categorías:', error);
+    console.error('Error al cargar la categoría:', error);
+   
   }
-}
-
-function mostrarCategorias(categorias) {
-  contenedorCategorias.innerHTML = '';
-  categorias.forEach(categoria => {
-    const btn = document.createElement('button');
-    btn.textContent = categoria === 'all' ? 'Todos' : categoria.charAt(0).toUpperCase() + categoria.slice(1);
-    btn.className = `px-4 py-2 rounded-full ${
-      categoria === categoriasSeleccionada ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-    }`;
-    btn.addEventListener('click', () => {
-      categoriasSeleccionada = categoria;
-      filtrarProductosPorCategoria(categoria);
-      mostrarCategorias(categorias);
-    });
-    contenedorCategorias.appendChild(btn);
-  });
-}
-
-function filtrarProductosPorCategoria(categoria) {
-  let productosFiltrados = productos;
-  if (categoria !== 'all') {
-    productosFiltrados = productos.filter(product => product.category === categoria);
-  }
-  mostrarProductos(productosFiltrados);
 }
 
 function filtrarProductos() {
-  let filtrados = productos;
-  const textoBusqueda = inputBusqueda.value.toLowerCase();
-  if (textoBusqueda.trim() !== '') {
+  let filtrados = productos; 
+  if (categoriaSeleccionada !== "all") {
+    filtrados = filtrados.filter(p => p.category === categoriaSeleccionada);
+  }
+  const texto= inputBusqueda.value.toLowerCase();
+  if (texto.trim() !== '') {
     filtrados = filtrados.filter(p =>
-      p.title.toLowerCase().includes(textoBusqueda) ||
-      p.description.toLowerCase().includes(textoBusqueda)
+      p.title.toLowerCase().includes(texto) ||
+      p.description.toLowerCase().includes(texto)
     );
   }
-  mostrarProductos(filtrados);
+  mostrarProductos(filtrados); 
 }
+ 
 function mostrarMensaje(mensaje) {
   contenedorProductos.innerHTML = `
     <p class="text-gray-500 text-center">${mensaje}</p>
   `;
 }
+function mostrarCategorias(categorias) {
+  contenedorCategorias.innerHTML = ''; 
+  categorias.forEach(cat => {
+    const btn = document.createElement("button"); 
+    btn.textContent = cat === "all" ? "Todos" : cat.charAt(0).toUpperCase() + cat.slice(1);
+    btn.className = `px-4 py-2 rounded-full ${
+      categoriaSeleccionada === cat ? "bg-white hover:bg-blue-600 text-yellow" : "bg-white hover:bg-blue-600 text-black"
+    } font-semibold mr-2 mb-2 transition-colors duration-300`;
+    btn.addEventListener("click", () => {
+      categoriaSeleccionada = cat;
+      mostrarCategorias(categorias);
+      filtrarProductos();
+    });
+    contenedorCategorias.appendChild(btn); 
+  });
+}
+
 function mostrarProductos(products) {
   contenedorProductos.innerHTML = '';
   products.forEach(product => {
     const productDiv = document.createElement('div');
     productDiv.className =
-      'bg-white rounded-lg shadow-md p-4 flex flex-col items-center hover:shadow-xl transition-shadow duration-300';
+      'bg-white rounded-lg shadow-md p-4 flex flex-col items-center hover:shadow-white transition-shadow duration-300';
     productDiv.innerHTML = `
       <img src="${product.image}" alt="${product.title}" class="w-32 h-32 object-cover mb-4 rounded-lg">
       <h2 class="text-lg font-semibold mb-2">${product.title}</h2>
       <p class="text-gray-700 mb-2">$${product.price}</p>
+      <button class="ver-detalles-btn bg-black text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors duration-300 mt-2">Ver detalles</button>
     `;
+    const verDetallesBtn = productDiv.querySelector('.ver-detalles-btn');
+    verDetallesBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      window.location.href = `detalle.html?id=${product.id}`;
+    });
     contenedorProductos.appendChild(productDiv);
   });
 }
+
+ inputBusqueda.addEventListener('input', filtrarProductos); 
+
 document.addEventListener('DOMContentLoaded', () => {
-  cargarProductos();
   cargarCategorias();
-  inputBusqueda.addEventListener('input', filtrarProductos);
+  cargarProductos();
+
 });
+const logoutBtn = document.getElementById('logoutBtn');
+function mostrarBotonLogout() {
+  if (localStorage.getItem('token')) {
+    logoutBtn.classList.remove('hidden');
+  } else {
+    logoutBtn.classList.add('hidden');
+  }
+}
+
+if (logoutBtn) {
+  mostrarBotonLogout();
+  logoutBtn.addEventListener('click', () => {
+    localStorage.removeItem('token');
+    window.location.href = 'login.html';
+  });
+}
+if (!localStorage.getItem('token')) {
+  window.location.href = 'login.html';
+}
