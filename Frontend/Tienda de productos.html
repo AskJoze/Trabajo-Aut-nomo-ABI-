@@ -17,7 +17,7 @@
     <a href="contacto.html" class="bg-purple-800 hover:bg-purple-900 text-white px-5 py-2 rounded-lg shadow transition-colors duration-300">Contacto</a>
     <button id="logoutBtn" class="hidden bg-gray-700 hover:bg-purple-800 text-white px-5 py-2 rounded-lg shadow transition-colors duration-300">Cerrar sesión</button>
   </div>
-</header>
+ </header>
   <section class="max-w-7xl mx-auto px-6 w-full">
     <div class="flex flex-col gap-4 items-center">
       <div class="flex justify-center mb-8 w-full max-w-lg">
@@ -30,7 +30,20 @@
       </div>
     </div>
   </section>
-  <div id="categorias" class="flex flex-wrap justify-center gap-3 mt-6 mb-4"></div>
+<div id="categorias" class="flex flex-wrap justify-center gap-3 mt-6 mb-4">
+    <button data-categoria="todos" class="categoria-btn px-4 py-2 rounded-full bg-white hover:bg-blue-600 text-black font-semibold mr-2 mb-2 transition-colors duration-300">
+        Todos
+    </button>
+    <button data-categoria="electronica" class="categoria-btn px-4 py-2 rounded-full bg-white hover:bg-blue-600 text-black font-semibold mr-2 mb-2 transition-colors duration-300">
+        Electrónica
+    </button>
+    <button data-categoria="ropa" class="categoria-btn px-4 py-2 rounded-full bg-white hover:bg-blue-600 text-black font-semibold mr-2 mb-2 transition-colors duration-300">
+        Ropa
+    </button>
+    <button data-categoria="hogar" class="categoria-btn px-4 py-2 rounded-full bg-white hover:bg-blue-600 text-black font-semibold mr-2 mb-2 transition-colors duration-300">
+        Hogar
+    </button>
+</div>
   <main class="max-w-7xl mx-auto px-6 pb-16 flex-1">
     <div
       id="productos"
@@ -39,7 +52,7 @@
   </main>
   <footer class="bg-gray-800 text-white py-10 mt-16 shadow-inner rounded-t-2xl border-t-2 border-purple-800">
     <div class="container mx-auto text-center">
-      <p class="font-semibold">&copy; 2025 Tienda de Jose Chasi. Todos los derechos reservados.</p>>
+      <p class="font-semibold">&copy; 2025 Tienda de Jose Chasi. Todos los derechos reservados.</p>
     </div>
   </footer>
   <script src="app.js"></script>

@@ -1,0 +1,77 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalles del Producto</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Times New Roman', Times, serif;
+    }
+  </style>
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col">
+  <header class="flex justify-between items-center px-8 py-6 bg-gray-900 shadow-lg border-b-2 border-purple-800 rounded-b-2xl mb-10">
+    <div></div>
+    <h1 class="text-4xl font-extrabold">Tienda de Jose Chasi</h1>
+    <button id="volverBtn" class="bg-purple-800 hover:bg-purple-900 text-white px-5 py-2 rounded-lg shadow transition-colors duration-300">Inicio</button>
+  </header>
+  <main class="flex-1 flex justify-center items-center px-4">
+    <div id="productoDetalle" class="bg-gray-800 rounded-2xl border border-purple-800 shadow-2xl p-8 w-full max-w-3xl">
+      <p class="text-center">Cargando producto...</p>
+    </div>
+  </main>
+  <footer class="bg-gray-900 text-white py-6 text-center border-t-2 border-purple-800 mt-10">
+    <p class="font-semibold">&copy; 2025 Tienda de Jose Chasi. Todos los derechos reservados.</p>
+  </footer>
+  <script>
+    async function cargarDetallesProducto() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const productId = urlParams.get('id');
+      const detalle = document.getElementById('productoDetalle');
+      if (!productId) {
+        detalle.innerHTML = '<p class="text-red-500">ID de producto no especificado.</p>';
+        return;
+      }
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/api/productos/${productId}`);
+        if (!response.ok) throw new Error("No se pudo cargar el producto");
+
+        const producto = await response.json();
+
+        const stockColor = producto.stock < 5 ? 'text-red-400' : 'text-green-400';
+        const stockTexto = producto.stock < 5
+          ? `¡Solo quedan ${producto.stock} en stock!`
+          : `Stock disponible: ${producto.stock}`;
+
+        detalle.innerHTML = `
+          <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
+            <img src="${producto.imagen}" alt="${producto.titulo}" class="w-64 h-64 object-contain rounded shadow-lg bg-white p-2" />
+            <div class="text-left">
+              <h2 class="text-3xl font-bold mb-2">${producto.titulo}</h2>
+              <div class="mb-4">
+                ${(producto.categorias || []).map(cat =>
+                  `<span class="inline-block bg-purple-800 text-white px-3 py-1 rounded-full text-sm mr-2">${cat.nombre}</span>`
+                ).join('')}
+              </div>
+              <p class="text-2xl text-purple-400 font-semibold mb-2">$${producto.precio}</p>
+              <p class="text-sm ${stockColor} font-medium mb-2">${stockTexto}</p>
+              <div class="text-yellow-400 text-xl mb-4">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+              <p class="text-white">${producto.descripcion}</p>
+            </div>
+          </div>
+        `;
+      } catch (error) {
+        console.error(error);
+        detalle.innerHTML = '<p class="text-red-500">No se pudo cargar el producto.</p>';
+      }
+    }
+    document.getElementById('volverBtn').addEventListener('click', () => {
+      window.location.href = 'Tienda de productos.html';
+    });
+
+    document.addEventListener('DOMContentLoaded', cargarDetallesProducto);
+  </script>
+</body>
+</html>
